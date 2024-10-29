@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Create User
         run: |
-          net user Nik6348 Shiv@Shakti143 /add
+           net user Nik6348 Shiv@Shakti143 /add
 
       - name: Install Chocolatey
         run: |
@@ -18,7 +18,7 @@ jobs:
       - name: Install Python and required packages
         run: |
           choco install -y python3 pip
-          pip install pyautogui requests
+          pip install pyautogui requests telegraph
 
       - name: Download and Install Avira
         run: |
@@ -30,7 +30,8 @@ jobs:
 
       - name: Execute Python script
         run: |
-          python 
+          python -c "import pyautogui as pag; pag.click(897, 64, duration=2)"
+          python << EOF
             import pyautogui as pag
             import time
             import requests
@@ -38,6 +39,7 @@ jobs:
 
             # Define actions with coordinates and duration
             actions = [
+                (516, 405, 4),  # install (wait 15sec)
                 (50, 100, 1),   # tic launch avica
                 (249, 203, 4),  # allow rdp (attempt to activate the Allow button)
                 (249, 203, 4),  # allow rdp (attempt to activate the Allow button again)
@@ -94,12 +96,4 @@ jobs:
                         print("Failed to upload the image.")
                 time.sleep(10)
 
-            print('Done!')
-
-
-      - name: Display Avira ID and credentials
-        run: |
-          type show.bat
-          echo Username: Nik6348
-          echo Password: Shiv@Shakti143
-          
+            print('Done!')          
