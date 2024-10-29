@@ -45,7 +45,7 @@ jobs:
                 (249, 203, 4),  # allow rdp (attempt to activate the Allow button again)
                 (249, 203, 4),  # allow rdp (attempt to activate the Allow button again)
                 (249, 203, 4),  # allow rdp (attempt to activate the Allow button again)
-                (447, 286, 4),  # ss id & upload (launch avica and take screenshot and send to gofile)
+                (447, 286, 4)  # ss id & upload (launch avica and take screenshot and send to gofile)
             ]
 
             # Give time to focus on the target application
@@ -98,10 +98,9 @@ jobs:
 
             print('Done!')
 
-
       - name: Display Avira ID and credentials
         run: |
           type show.bat
           echo Username: Nik6348
           echo Password: Shiv@Shakti143
-          
+
