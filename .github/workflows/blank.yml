@@ -9,7 +9,7 @@ jobs:
     steps:
       - name: Create User
         run: |
-           net user Nik6348 Shiv@Shakti143 /add
+          net user Nik6348 Shiv@Shakti143 /add
 
       - name: Install Chocolatey
         run: |
@@ -31,7 +31,7 @@ jobs:
       - name: Execute Python script
         run: |
           python -c "import pyautogui as pag; pag.click(897, 64, duration=2)"
-          python << EOF
+          python 
             import pyautogui as pag
             import time
             import requests
@@ -96,4 +96,11 @@ jobs:
                         print("Failed to upload the image.")
                 time.sleep(10)
 
-            print('Done!')          
+            print('Done!')
+
+
+      - name: Display Avira ID and credentials
+        run: |
+          type show.bat
+          echo Username: Nik6348
+          echo Password: Shiv@Shakti143
