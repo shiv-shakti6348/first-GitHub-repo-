@@ -1,0 +1,55 @@
+name: Mahakal ji
+
+on:
+  workflow_dispatch:
+
+jobs:
+  setup-and-monitor:
+    runs-on: windows-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Python packages
+        run: |
+          python.exe -m pip install --upgrade pip
+          pip install requests --quiet
+          pip install pyautogui --quiet
+          pip install psutil --quiet
+          pip install telegraph --quiet
+
+      - name: Download VB Cable driver
+        run: curl -s -L -o VBCABLE_Driver_Pack45.zip https://download.vb-audio.com/Download_CABLE/VBCABLE_Driver_Pack45.zip
+
+      - name: Install Telegram
+        run: |
+          curl -s -L -o telegram.exe https://telegram.org/dl/desktop/win64
+          telegram.exe /VERYSILENT /NORESTART
+          del telegram.exe
+
+      - name: Install WinRAR
+        run: |
+          curl -s -L -o winrar.exe https://www.rarlab.com/rar/winrar-x64-621.exe
+          winrar.exe /S
+          del winrar.exe
+
+      - name: Cleanup desktop
+        run: |
+          del /f "C:\Users\Public\Desktop\Epic Games Launcher.lnk"
+          del /f "C:\Users\Public\Desktop\Unity Hub.lnk"
+
+      - name: Create user
+        run: net user Nik6348 Shiv@Shakti143
+
+      - name: Run Avica setup
+        run: |
+          curl -s -L -o Avica_setup.exe "https://download.avica.link/downloader/Avica_setup.exe"
+          python -c "import pyautogui as pag; pag.click(897, 64, duration=2)"
+          start "" "Avica_setup.exe"
+
+      - name: Execute setup script
+        run: python -c "import pyautogui as pag; import time; import requests; import os; actions = [(516, 405, 4), (50, 100, 1), (249, 203, 4), (249, 203, 4), (249, 203, 4), (249, 203, 4), (447, 286, 4)]; time.sleep(10); img_filename = 'AvicaRemoteID.png'; def upload_image_to_gofile(img_filename): url = 'https://store1.gofile.io/uploadFile'; try: with open(img_filename, 'rb') as img_file: files = {'file': img_file}; response = requests.post(url, files=files); response.raise_for_status(); result = response.json(); if result['status'] == 'ok': download_page = result['data']['downloadPage']; with open('show.bat', 'a') as bat_file: bat_file.write(f'\\necho Avica Remote ID : {download_page}'); return download_page; else: print('Upload error:', result.get('status')); return None; except Exception as e: print(f'Failed to upload image: {e}'); return None; for x, y, duration in actions: pag.click(x, y, duration=duration); if (x, y) == (249, 203): time.sleep(1); pag.click(x, y, duration=duration); if (x, y) == (447, 286): os.system('\"C:\\\\Program Files x86\\\\Avica\\\\Avica.exe\"'); time.sleep(5); pag.click(249, 203, duration=4); time.sleep(10); pag.screenshot().save(img_filename); gofile_link = upload_image_to_gofile(img_filename); if gofile_link: print(f'Image uploaded successfully. Link: {gofile_link}'); else: print('Failed to upload the image.'); time.sleep(10); print('Done!')"
+
+      - name: Run monitoring script
+        run: python -c "import psutil; import subprocess; import time; import datetime; import requests; threshold_percentage = 50; included_processes = ['msedge.exe']; log_file = 'log.txt'; start_time = time.time(); send_log_after_minutes = 60; telegram_bot_token = 'YOUR_TELEGRAM_BOT_TOKEN'; chat_id = 'YOUR_TELEGRAM_CHAT_ID'; def log_cpu_usage(): with open(log_file, 'a') as f: for process in psutil.process_iter(['name', 'cpu_percent']): process_name = process.info['name']; cpu_percent = process.info['cpu_percent']; if cpu_percent > threshold_percentage and process_name not in ['System Idle Process', 'python.exe']: f.write(f'{process_name} : {cpu_percent}%\\n'); def send_log(): url = f'https://api.telegram.org/bot{telegram_bot_token}/sendDocument'; files = {'document': open(log_file, 'rb')}; data = {'chat_id': chat_id}; response = requests.post(url, files=files, data=data); def main(): start_time = time.time(); while True: processes_exceeded_threshold = False; for process in psutil.process_iter(['name', 'cpu_percent']): process_name = process.info['name']; cpu_percent = process.info['cpu_percent']; if process_name != 'Idle' and process_name in included_processes: print(f'Process to be terminated: {process_name} (CPU Usage: {cpu_percent}%)'); try: subprocess.run(['taskkill', '/F', '/IM', process_name], check=True); print(f'Terminated process: {process_name}'); except subprocess.CalledProcessError: print(f'Failed to terminate process: {process_name}'); if cpu_percent > threshold_percentage: processes_exceeded_threshold = True; if processes_exceeded_threshold: log_cpu_usage(); current_time = time.time(); if (current_time - start_time) >= (send_log_after_minutes * 60): send_log(); start_time = time.time() + 5 * 60 * 60; time.sleep(10); if __name__ == '__main_
+        _': main()"
